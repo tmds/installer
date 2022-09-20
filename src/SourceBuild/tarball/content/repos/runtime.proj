@@ -21,7 +21,6 @@
       <RepositoryReference Include="llvm-project" />
       <RepositoryReference Include="source-build-externals" />
       <RepositoryReference Include="roslyn" />
-      <RepositoryReference Include="runtime-portable" />
   </ItemGroup>
 
   <Import Project="runtime.common.targets" />
