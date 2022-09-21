@@ -6,8 +6,6 @@ Subject: [PATCH] non-portable
 ---
  Directory.Build.targets                           | 15 +++++++++++++++
  .../tools/aot/ILCompiler/ILCompiler.csproj        |  2 +-
- src/coreclr/tools/aot/crossgen2/crossgen2.csproj  |  3 ++-
- 3 files changed, 18 insertions(+), 2 deletions(-)
 
 diff --git a/Directory.Build.targets b/Directory.Build.targets
 index 541cdfb59f2..79b0f28516d 100644
@@ -48,20 +46,6 @@ index 3b70c7b427b..c06ec169c25 100644
      <PublishSingleFile>true</PublishSingleFile>
    </PropertyGroup>
  
-diff --git a/src/coreclr/tools/aot/crossgen2/crossgen2.csproj b/src/coreclr/tools/aot/crossgen2/crossgen2.csproj
-index 0d50278228a..aa6c96822e7 100644
---- a/src/coreclr/tools/aot/crossgen2/crossgen2.csproj
-+++ b/src/coreclr/tools/aot/crossgen2/crossgen2.csproj
-@@ -14,7 +14,8 @@
-     <!-- Trimming is not currently working, but set the appropriate feature flags for NativeAOT -->
-     <PublishTrimmed Condition="'$(NativeAotSupported)' == 'true'">true</PublishTrimmed>
-     <RuntimeIdentifiers Condition="'$(RunningPublish)' != 'true' and '$(DotNetBuildFromSource)' != 'true'">linux-x64;linux-musl-x64;linux-arm;linux-musl-arm;linux-arm64;linux-musl-arm64;freebsd-x64;osx-x64;osx-arm64;win-x64;win-x86;win-arm64;win-arm</RuntimeIdentifiers>
--    <RuntimeIdentifiers Condition="'$(DotNetBuildFromSource)' == 'true'">$(PackageRID)</RuntimeIdentifiers>
-+    <RuntimeIdentifier Condition="'$(DotNetBuildFromSource)' == 'true'">$(PackageRID)</RuntimeIdentifier>
-+    <AppendRuntimeIdentifierToOutputPath Condition="'$(RunningPublish)' != 'true'">false</AppendRuntimeIdentifierToOutputPath>
-     <SelfContained>false</SelfContained>
-     <SelfContained Condition="'$(RunningPublish)' == 'true'">true</SelfContained>
-   </PropertyGroup>
 -- 
 2.37.3
 
