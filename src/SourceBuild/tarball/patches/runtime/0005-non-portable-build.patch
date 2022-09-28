@@ -1,38 +1,39 @@
-From 39d69b410eff3e6a22aa3a25489263a35c7da453 Mon Sep 17 00:00:00 2001
+From 2775cf0d524f7a31f8cad3405b3e111056b345e3 Mon Sep 17 00:00:00 2001
 From: Tom Deseyn <tom.deseyn@gmail.com>
-Date: Mon, 19 Sep 2022 19:24:56 +0200
-Subject: [PATCH] non-portable
+Date: Wed, 28 Sep 2022 16:04:00 +0200
+Subject: [PATCH] non-portable-build
 
 ---
  Directory.Build.targets                           | 15 +++++++++++++++
  .../tools/aot/ILCompiler/ILCompiler.csproj        |  2 +-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/Directory.Build.targets b/Directory.Build.targets
-index 541cdfb59f2..79b0f28516d 100644
+index 541cdfb59f2..244569df0c2 100644
 --- a/Directory.Build.targets
 +++ b/Directory.Build.targets
-@@ -7,6 +7,21 @@
-     <ImportDirectoryBuildTargets>false</ImportDirectoryBuildTargets>
-   </PropertyGroup>
+@@ -12,6 +12,21 @@
+   <Import Project="$(RepositoryEngineeringDir)generators.targets" />
+   <Import Project="$(RepositoryEngineeringDir)python.targets" />
  
 +  <!--
 +  When .NET gets built from source, make the SDK aware there are bootstrap packages
 +  for Microsoft.NETCore.App.Runtime.<rid> and Microsoft.NETCore.App.Crossgen2.<rid>.
 +  -->
-+  <ItemGroup Condition=" '$(DotNetBuildFromSource)' == 'true' ">
-+    <KnownFrameworkReference Update="Microsoft.NETCore.App">
-+      <RuntimePackRuntimeIdentifiers>%(KnownFrameworkReference.RuntimePackRuntimeIdentifiers);$(NETCoreSdkRuntimeIdentifier)</RuntimePackRuntimeIdentifiers>
++  <ItemGroup Condition=" '$(DotNetBuildFromSource)' == 'true' " >
++        <KnownFrameworkReference Update="@(KnownFrameworkReference->WithMetadataValue('Identity', 'Microsoft.NETCore.App')->WithMetadataValue('TargetFramework', '$(NetCoreAppCurrent)'))">
++      <RuntimePackRuntimeIdentifiers>$(PackageRID)</RuntimePackRuntimeIdentifiers>
 +    </KnownFrameworkReference>
-+    <KnownCrossgen2Pack Update="Microsoft.NETCore.App.Crossgen2">
-+      <Crossgen2RuntimeIdentifiers>%(KnownCrossgen2Pack.Crossgen2RuntimeIdentifiers);$(NETCoreSdkRuntimeIdentifier)</Crossgen2RuntimeIdentifiers>
++    <KnownCrossgen2Pack Update="@(KnownCrossgen2Pack->WithMetadataValue('Identity', 'Microsoft.NETCore.App.Crossgen2')->WithMetadataValue('TargetFramework', '$(NetCoreAppCurrent)'))">
++      <Crossgen2RuntimeIdentifiers>$(PackageRID)</Crossgen2RuntimeIdentifiers>
 +    </KnownCrossgen2Pack>
 +    <!-- Avoid references to Microsoft.AspNetCore.App.Runtime.<rid> -->
 +    <KnownFrameworkReference Remove="Microsoft.AspNetCore.App" />
 +  </ItemGroup>
 +
-   <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
-   <Import Project="$(RepositoryEngineeringDir)liveBuilds.targets" />
-   <Import Project="$(RepositoryEngineeringDir)generators.targets" />
+   <PropertyGroup>
+     <!--
+       Define this here (not just in Versions.props) because the SDK resets it
 diff --git a/src/coreclr/tools/aot/ILCompiler/ILCompiler.csproj b/src/coreclr/tools/aot/ILCompiler/ILCompiler.csproj
 index 3b70c7b427b..c06ec169c25 100644
 --- a/src/coreclr/tools/aot/ILCompiler/ILCompiler.csproj
