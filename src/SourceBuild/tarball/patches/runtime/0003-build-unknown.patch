@@ -78,7 +78,7 @@ index 9ca390c502f..76e41408211 100644
  
      <LogVerbosity Condition="'$(LogVerbosity)' == ''">minimal</LogVerbosity>
    </PropertyGroup>
-@@ -26,20 +32,20 @@
+@@ -26,20 +32,21 @@
    <Target Name="GetRuntimeSourceBuildCommandConfiguration"
            BeforeTargets="GetSourceBuildCommandConfiguration">
      <PropertyGroup>
@@ -99,7 +99,7 @@ index 9ca390c502f..76e41408211 100644
 +      <InnerBuildArgs>$(InnerBuildArgs) /p:RuntimeOS=$(RuntimeOS)</InnerBuildArgs>
        <InnerBuildArgs>$(InnerBuildArgs) /p:BuildDebPackage=false</InnerBuildArgs>
        <InnerBuildArgs>$(InnerBuildArgs) /p:EnableNgenOptimization=false</InnerBuildArgs>
--      <InnerBuildArgs>$(InnerBuildArgs) /p:EnablePackageValidation=false</InnerBuildArgs>
+       <InnerBuildArgs>$(InnerBuildArgs) /p:EnablePackageValidation=false</InnerBuildArgs>
 +      <InnerBuildArgs>$(InnerBuildArgs) /p:AdditionalRuntimeIdentifierParent=$(BaseOS)</InnerBuildArgs>
      </PropertyGroup>
    </Target>
