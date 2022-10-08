@@ -1,12 +1,18 @@
-From 2775cf0d524f7a31f8cad3405b3e111056b345e3 Mon Sep 17 00:00:00 2001
+From e257e3980326db4e6b2aad1bb243852bff10ddb4 Mon Sep 17 00:00:00 2001
 From: Tom Deseyn <tom.deseyn@gmail.com>
-Date: Wed, 28 Sep 2022 16:04:00 +0200
-Subject: [PATCH] non-portable-build
+Date: Wed, 14 Sep 2022 11:06:42 +0200
+Subject: [PATCH] source-build: support building runtime using non-portable
+ runtime packages.
 
+Currently source-build performs a 'runtime-portable' build that produces
+'linux-{arch}' packages that are used when building target runtime (non-portable).
+
+With this change, we can use the non-portable packages that are produced by
+a previous (non-portable) 'runtime' build. This helps eliminate the
+'runtime-portable' build.
 ---
- Directory.Build.targets                           | 15 +++++++++++++++
- .../tools/aot/ILCompiler/ILCompiler.csproj        |  2 +-
- 2 files changed, 16 insertions(+), 1 deletion(-)
+ Directory.Build.targets | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/Directory.Build.targets b/Directory.Build.targets
 index 541cdfb59f2..244569df0c2 100644
@@ -34,19 +40,6 @@ index 541cdfb59f2..244569df0c2 100644
    <PropertyGroup>
      <!--
        Define this here (not just in Versions.props) because the SDK resets it
-diff --git a/src/coreclr/tools/aot/ILCompiler/ILCompiler.csproj b/src/coreclr/tools/aot/ILCompiler/ILCompiler.csproj
-index 3b70c7b427b..c06ec169c25 100644
---- a/src/coreclr/tools/aot/ILCompiler/ILCompiler.csproj
-+++ b/src/coreclr/tools/aot/ILCompiler/ILCompiler.csproj
-@@ -11,7 +11,7 @@
-   <PropertyGroup>
-     <PublishDir>$(RuntimeBinDir)ilc-published/</PublishDir>
-     <PublishTrimmed>true</PublishTrimmed>
--    <PublishReadyToRun>true</PublishReadyToRun>
-+    <PublishReadyToRun Condition="'$(DotNetBuildFromSource)' != 'true' ">true</PublishReadyToRun>
-     <PublishSingleFile>true</PublishSingleFile>
-   </PropertyGroup>
- 
 -- 
 2.37.3
 
